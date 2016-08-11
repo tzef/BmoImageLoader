@@ -3,20 +3,26 @@
   "version": "0.1.0",
   "summary": "A short description of BmoImageLoader.",
   "description": "TODO: Add long description of the pod here.",
-  "homepage": "https://github.com/<GITHUB_USERNAME>/BmoImageLoader",
+  "homepage": "https://github.com/tzef/BmoImageLoader",
   "license": {
     "type": "MIT",
     "file": "LICENSE"
   },
   "authors": {
-    "LEE ZHE YU": "tzef8220@gmail.com"
+    "LEE ZHE YU": "admin@bunbunu.com"
   },
   "source": {
-    "git": "https://github.com/<GITHUB_USERNAME>/BmoImageLoader.git",
+    "git": "https://github.com/tzef/BmoImageLoader.git",
     "tag": "0.1.0"
   },
   "platforms": {
     "ios": "8.0"
   },
-  "source_files": "BmoImageLoader/Classes/**/*"
+  "source_files": "BmoImageLoader/Classes/**/*",
+  "frameworks": "UIKit",
+  "dependencies": {
+    "AlamofireImage": [
+      "~> 2.0"
+    ]
+  }
 }

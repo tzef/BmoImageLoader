@@ -1,5 +1,9 @@
 PODS:
-  - BmoImageLoader (0.1.0)
+  - Alamofire (3.4.1)
+  - AlamofireImage (2.4.1):
+    - Alamofire (~> 3.3)
+  - BmoImageLoader (0.1.0):
+    - AlamofireImage (~> 2.0)
 
 DEPENDENCIES:
   - BmoImageLoader (from `../`)
@@ -9,7 +13,9 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  BmoImageLoader: 5152ec0afa4c83285d8afa4b30994d9e1932391b
+  Alamofire: 01a82e2f6c0f860ade35534c8dd88be61bdef40c
+  AlamofireImage: 3ccf3347d9ea24580dc11fb892770a0be6a29826
+  BmoImageLoader: 894199df2a9e28dcd0e31a3088bf93eea8c5e097
 
 PODFILE CHECKSUM: 2c28a5646297d0a4a88330b09fee98cc5f8949b1
 
