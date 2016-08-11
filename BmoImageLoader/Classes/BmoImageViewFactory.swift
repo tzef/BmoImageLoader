@@ -8,7 +8,7 @@
 
 import UIKit
 import AlamofireImage
-enum BmoImageViewShape {
+public enum BmoImageViewShape {
     case RoundedRect(corner: CGFloat)
     case Triangle
     case Pentagon
@@ -26,8 +26,8 @@ public enum BmoImageViewProgressStyle {
     case PercentNumber
     case DefaultIndicator(indicatorStyle: UIActivityIndicatorViewStyle)
 }
-struct BmoImageViewFactory {
-    static func shape(imageView: UIImageView, shape: BmoImageViewShape) {
+public struct BmoImageViewFactory {
+    public static func shape(imageView: UIImageView, shape: BmoImageViewShape) {
         imageView.layoutIfNeeded()
         
         let shapeLayer = CAShapeLayer()
@@ -35,7 +35,7 @@ struct BmoImageViewFactory {
         imageView.layer.mask = shapeLayer
     }
     
-    static func progressAnimation (
+    public static func progressAnimation (
         imageView: UIImageView,
         newImage: UIImage?,
         style: BmoImageViewProgressStyle) -> BmoProgressAnimator {

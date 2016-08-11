@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol BmoProgressAnimator {
+public protocol BmoProgressAnimator {
     func setTotalUnitCount(count: Int64) -> BmoProgressAnimator
     func setCompletedUnitCount(count: Int64) -> BmoProgressAnimator
     func setCompletionState(state: BmoProgressCompletionState) -> BmoProgressAnimator
@@ -61,7 +61,7 @@ public enum BmoProgressCompletionResult<Value, Error: NSError> {
         }
     }
 }
-enum BmoProgressCompletionState {
+public enum BmoProgressCompletionState {
     case Proceed
     case Succeed
     case Failed(error: NSError?)

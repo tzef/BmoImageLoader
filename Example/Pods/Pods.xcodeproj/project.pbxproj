@@ -460,11 +460,11 @@
 		D02CEA5C2C4892F7B55269FB2FFA0361 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				69B9AA0AE3736D17A160218C02C45F10 /* Helper */,
+				26E96D1113757D1DD02ACB68C8D61F7A /* ProgressAnimation */,
 				05DA733557CC0A309C7A1968605A3E1D /* BmoImageViewExtension.swift */,
 				E88AFBA74A6A248194C16649F3EA7F40 /* BmoImageViewFactory.swift */,
 				D15EC9A131EC4D8E171C2CC6B378C793 /* BmoPathExtension.swift */,
-				69B9AA0AE3736D17A160218C02C45F10 /* Helper */,
-				26E96D1113757D1DD02ACB68C8D61F7A /* ProgressAnimation */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
