@@ -1,0 +1,6 @@
+framework module BmoImageLoader {
+  umbrella header "BmoImageLoader-umbrella.h"
+
+  export *
+  module * { export * }
+}

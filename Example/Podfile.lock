@@ -1,0 +1,16 @@
+PODS:
+  - BmoImageLoader (0.1.0)
+
+DEPENDENCIES:
+  - BmoImageLoader (from `../`)
+
+EXTERNAL SOURCES:
+  BmoImageLoader:
+    :path: ../
+
+SPEC CHECKSUMS:
+  BmoImageLoader: 5152ec0afa4c83285d8afa4b30994d9e1932391b
+
+PODFILE CHECKSUM: 2c28a5646297d0a4a88330b09fee98cc5f8949b1
+
+COCOAPODS: 1.0.1
