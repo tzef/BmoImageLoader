@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'BmoImageLoader_Example' do
+  pod 'BmoImageLoader', :path => '../'
+
+  target 'BmoImageLoader_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
