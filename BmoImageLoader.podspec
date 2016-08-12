@@ -4,7 +4,7 @@ Pod::Spec.new do |s|
   s.summary          = 'A progress animated component for UIImageView'
   s.description      = <<-DESC
 BmoImageLoader is a progress animated component for UIImageView
-Image downloadder implementation and cache manager use AlamofireImage
+Image downloader implementation and cache manager use AlamofireImage
                        DESC
   s.homepage         = 'https://github.com/tzef/BmoImageLoader'
   s.screenshots      = 'https://raw.githubusercontent.com/tzef/BmoImageLoader/master/Screenshot/animationStyle.png', 'https://raw.githubusercontent.com/tzef/BmoImageLoader/master/Screenshot/progressControl.png'
