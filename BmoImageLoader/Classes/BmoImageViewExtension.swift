@@ -151,11 +151,6 @@ extension UIImageView {
                 completion?(response)
             }
         }
-        let progrssHandler: ImageDownloader.ProgressHandler = {(bytesRead: Int64, totalBytesRead: Int64, totalExpectedBytesToRead: Int64) in
-            animator
-                .setTotalUnitCount(totalExpectedBytesToRead)
-                .setCompletedUnitCount(totalBytesRead)
-        }
         return animator
     }
     
