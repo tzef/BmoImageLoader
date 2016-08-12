@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
   s.name             = 'BmoImageLoader'
   s.version          = '0.1.0'
-  s.summary          = 'A short description of BmoImageLoader.'
+  s.summary          = 'A progress animated component for UIImageView'
   s.description      = <<-DESC
 BmoImageLoader is a progress animated component for UIImageView
 Image downloadder implementation and cache manager use AlamofireImage
