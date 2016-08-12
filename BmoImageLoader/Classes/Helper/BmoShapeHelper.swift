@@ -25,8 +25,8 @@ struct BmoShapeHelper {
             let path = CGPathCreateMutable()
             let radius = min(rect.width, rect.height) / 2
             let startPoint = CGPoint(x: rect.midX, y: rect.midY)
-            CGPathMoveToPoint(path, nil, startPoint.x, startPoint.y)
             let points = polygonPointsArray(5, x: startPoint.x, y: startPoint.y, radius: radius, adjustment: adjustment)
+            CGPathMoveToPoint(path, nil, points[0].x, points[0].y)
             for p in points {
                 CGPathAddLineToPoint(path, nil, p.x, p.y)
             }

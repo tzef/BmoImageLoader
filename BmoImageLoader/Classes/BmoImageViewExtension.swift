@@ -10,6 +10,10 @@ import UIKit
 import Alamofire
 import AlamofireImage
 
+enum BmoImageCatch {
+    case CatchDefault
+    case CatchNone
+}
 extension UIImageView {
     func bmo_removeProgressAnimation() {
         for subView in self.subviews {
@@ -51,12 +55,64 @@ extension UIImageView {
                 result: .Success(image)
             )
             completion?(response)
-            self.image = image
+            
+            if let runAnimation = self.bmo_runAnimationIfCatched where runAnimation == true {
+                let animator = generateAnimator(placeholderImage, style: style, urlRequest: urlRequest.URLRequest, completion: completion)
+                animator
+                    .setNewImage(image)
+                    .setCompletionState(.Succeed)
+            } else {
+                self.image = image
+            }
             return
         }
 
         // Generate progress animation if the image need to downlaod from internet
-        let animator = BmoImageViewFactory.progressAnimation(self, newImage: placeholderImage, style: style)
+        let animator = generateAnimator(placeholderImage, style: style, urlRequest: urlRequest.URLRequest, completion: completion)
+        let progrssHandler: ImageDownloader.ProgressHandler = {(bytesRead: Int64, totalBytesRead: Int64, totalExpectedBytesToRead: Int64) in
+            animator
+                .setTotalUnitCount(totalExpectedBytesToRead)
+                .setCompletedUnitCount(totalBytesRead)
+        }
+
+        // Generate a unique download id to check whether the active request has changed while downloading
+        let downloadID = NSUUID().UUIDString
+
+        // Download the image, then run the image transition or completion handler
+        let requestReceipt = imageDownloader.downloadImage (
+            URLRequest: urlRequest,
+            receiptID: downloadID,
+            filter: nil,
+            progress: progrssHandler,
+            progressQueue: dispatch_get_main_queue(),
+            completion: { [weak self] response in
+                guard let strongSelf = self else { return }
+                guard
+                    strongSelf.isURLRequestURLEqualToActiveRequestURL(response.request) &&
+                        strongSelf.af_activeRequestReceipt?.receiptID == downloadID
+                    else {
+                        return
+                }
+
+                if let image = response.result.value {
+                    animator
+                        .setNewImage(image)
+                        .setCompletionState(.Succeed)
+                } else {
+                    animator.setCompletionState(BmoProgressCompletionState.Failed(error: response.result.error))
+                }
+                
+                strongSelf.af_activeRequestReceipt = nil
+            }
+        )
+        
+        af_activeRequestReceipt = requestReceipt
+    }
+    public func bmo_runAnimationIfCatched(run: Bool) {
+        self.bmo_runAnimationIfCatched = run
+    }
+    private func generateAnimator(newImage: UIImage?, style: BmoImageViewProgressStyle, urlRequest: NSURLRequest, completion: (Response<UIImage, NSError> -> Void)?) -> BmoProgressAnimator {
+        let animator = BmoImageViewFactory.progressAnimation(self, newImage: newImage, style: style)
         animator.setCompletionBlock { (animatorResult) in
             var errorMsg = ""
             if animatorResult.isSuccess {
@@ -100,45 +156,14 @@ extension UIImageView {
                 .setTotalUnitCount(totalExpectedBytesToRead)
                 .setCompletedUnitCount(totalBytesRead)
         }
-
-        // Generate a unique download id to check whether the active request has changed while downloading
-        let downloadID = NSUUID().UUIDString
-
-        // Download the image, then run the image transition or completion handler
-        let requestReceipt = imageDownloader.downloadImage (
-            URLRequest: urlRequest,
-            receiptID: downloadID,
-            filter: nil,
-            progress: progrssHandler,
-            progressQueue: dispatch_get_main_queue(),
-            completion: { [weak self] response in
-                guard let strongSelf = self else { return }
-                guard
-                    strongSelf.isURLRequestURLEqualToActiveRequestURL(response.request) &&
-                        strongSelf.af_activeRequestReceipt?.receiptID == downloadID
-                    else {
-                        return
-                }
-
-                if let image = response.result.value {
-                    animator
-                        .setNewImage(image)
-                        .setCompletionState(.Succeed)
-                } else {
-                    animator.setCompletionState(BmoProgressCompletionState.Failed(error: response.result.error))
-                }
-                
-                strongSelf.af_activeRequestReceipt = nil
-            }
-        )
-        
-        af_activeRequestReceipt = requestReceipt
+        return animator
     }
     
     // MARK: - Private - AssociatedKeys
     private struct AssociatedKeys {
         static var ActiveRequestReceiptKey = "af_UIImageView.ActiveRequestReceipt"
         static var BmoProgressAnimatorKey = "bmo_ProgressAnimator"
+        static var BmoRunAnimationIfCatched = "bmo_runAnimationIfCatched"
     }
     var af_activeRequestReceipt: RequestReceipt? {
         get {
@@ -146,6 +171,14 @@ extension UIImageView {
         }
         set {
             objc_setAssociatedObject(self, &AssociatedKeys.ActiveRequestReceiptKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+    var bmo_runAnimationIfCatched: Bool? {
+        get {
+            return objc_getAssociatedObject(self, &AssociatedKeys.BmoRunAnimationIfCatched) as? Bool
+        }
+        set {
+            objc_setAssociatedObject(self, &AssociatedKeys.BmoRunAnimationIfCatched, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 

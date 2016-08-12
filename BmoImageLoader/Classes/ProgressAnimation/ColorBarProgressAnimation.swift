@@ -15,15 +15,15 @@ class ColorBarProgressAnimation: BaseProgressAnimation {
     var newImageView = BmoProgressImageView()
     let fillBarView = BmoProgressHelpView()
     let fillBarMaskLayer = CAShapeLayer()
-    var positionTop = true
+    var position = BmoProgressPosition.PositionCenter
     let barHeight = 3
     
-    convenience init(imageView: UIImageView, newImage: UIImage?, positionTop: Bool) {
+    convenience init(imageView: UIImageView, newImage: UIImage?, position: BmoProgressPosition) {
         self.init()
         
-        self.positionTop = positionTop
         self.imageView = imageView
         self.newImage = newImage
+        self.position = position
         
         progressColor = UIColor(red: 6.0/255.0, green: 125.0/255.0, blue: 255.0/255.0, alpha: 1.0)
         resetAnimation()
@@ -37,11 +37,7 @@ class ColorBarProgressAnimation: BaseProgressAnimation {
                 self.displayLink = nil
             }
             let width = fillBarView.bounds.width * helpPoint.x
-            if positionTop == true {
-                fillBarMaskLayer.path = CGPathCreateWithRect(CGRectMake(0, 0, width, fillBarView.bounds.height), nil)
-            } else {
-                fillBarMaskLayer.path = CGPathCreateWithRect(CGRectMake(0, 0, width, fillBarView.bounds.height), nil)
-            }
+            fillBarMaskLayer.path = CGPathCreateWithRect(CGRectMake(0, 0, width, fillBarView.bounds.height), nil)
         }
     }
     override func successAnimation(imageView: UIImageView) {
@@ -103,9 +99,12 @@ class ColorBarProgressAnimation: BaseProgressAnimation {
         fillBarView.backgroundColor = progressColor
         fillBarView.layer.mask = fillBarMaskLayer
         containerView.addSubview(fillBarView)
-        if positionTop == true {
+        switch position {
+        case .PositionTop:
             fillBarView.autoFitTop(containerView, height: CGFloat(barHeight))
-        } else {
+        case .PositionCenter:
+            fillBarView.autoFitCenterVertical(containerView, height: CGFloat(barHeight))
+        case .PositionBottom:
             fillBarView.autoFitBottom(containerView, height: CGFloat(barHeight))
         }
         fillBarMaskLayer.path = CGPathCreateMutable()

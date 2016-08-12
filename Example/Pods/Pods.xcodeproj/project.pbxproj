@@ -28,7 +28,6 @@
 		5CB05FBCB32D21E194B5ECF680CB6AE0 /* Download.swift in Sources */ = {isa = PBXBuildFile; fileRef = E552F0515070FE3ADD1C30FAF7AE5CB1 /* Download.swift */; };
 		620C5230586F04C292E392BAB1AEFAA6 /* Pods-BmoImageLoader_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = CFF04659DA0671BCB97AFE3B74C58000 /* Pods-BmoImageLoader_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		62E8346F03C03E7F4D631361F325689E /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDACAD1D8B293EDE9515FA531593649A /* Response.swift */; };
-		66698376688847E87E1100AE523231BD /* BmoViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C4DEAFB27D77C6F487FE2E37486957 /* BmoViewExtension.swift */; };
 		66E9E6FE8E117D8603C88951B569C866 /* Request+AlamofireImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB21497F843DA83273C5AAA8ADAA81A /* Request+AlamofireImage.swift */; };
 		6A767F681EA76A04E09781128E8C7AF2 /* BmoImageLoader-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 23FA1A4D6EDF8F3FD8E4D0E9984D0C37 /* BmoImageLoader-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6CFC9FF894D1F77EAE529565348EEB7F /* BaseProgressAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35AD5092F1AFB50D6CD5343E69984229 /* BaseProgressAnimation.swift */; };
@@ -54,6 +53,7 @@
 		BFD1AF59C1DA31A9304DDCF312F6B23D /* BmoImageViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E88AFBA74A6A248194C16649F3EA7F40 /* BmoImageViewFactory.swift */; };
 		C0DB70AB368765DC64BFB5FEA75E0696 /* ParameterEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89DBE304DB2033CDF99CF9A23354D04 /* ParameterEncoding.swift */; };
 		C7B6DD7C0456C50289A2C381DFE9FA3F /* MultipartFormData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2B4F32C4D92F1ACC0215E05EBEC2B6 /* MultipartFormData.swift */; };
+		C91296331D5D6A65009EE934 /* BmoViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91296311D5D69FA009EE934 /* BmoViewExtension.swift */; };
 		E07E124699B343EE307B844E0F6EE083 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C78C6D0F956EB6D701078B509E7C3C3 /* Alamofire.framework */; };
 		E14667F1AD777DAFAC3F310CDE18F161 /* AlamofireImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B285A063A7E47F693C1878E6AF0C5BBA /* AlamofireImage.framework */; };
 		E679C5042A1AABE4D7DAD3AF9D627D37 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 573A744432C487A66888111542F10737 /* UIKit.framework */; };
@@ -144,7 +144,6 @@
 		50DAA5B42A8A063AD8FF2454EE9F0F2D /* Pods-BmoImageLoader_Tests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-BmoImageLoader_Tests-umbrella.h"; sourceTree = "<group>"; };
 		53936BFCC71C87B18A0A58F5823CE181 /* Pods-BmoImageLoader_Tests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-BmoImageLoader_Tests-resources.sh"; sourceTree = "<group>"; };
 		559CA7D1394FAFA280876CB17D6B8B3F /* Pods-BmoImageLoader_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-BmoImageLoader_Tests-dummy.m"; sourceTree = "<group>"; };
-		55C4DEAFB27D77C6F487FE2E37486957 /* BmoViewExtension.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BmoViewExtension.swift; sourceTree = "<group>"; };
 		573A744432C487A66888111542F10737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		57BC76001BA4050C502C48EB58344EF5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		5AB663A81965849DB1EECF0B6E85B72D /* Pods-BmoImageLoader_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-BmoImageLoader_Example-dummy.m"; sourceTree = "<group>"; };
@@ -180,6 +179,7 @@
 		BD13F9498961CBAA32075869F79A1CEF /* ImageCache.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ImageCache.swift; path = Source/ImageCache.swift; sourceTree = "<group>"; };
 		BDA2A923BC7631394FD3CEEBDE8D0B13 /* Request.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Request.swift; path = Source/Request.swift; sourceTree = "<group>"; };
 		C353EF8CECF13CB746532E7CCF3D354C /* Manager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Manager.swift; path = Source/Manager.swift; sourceTree = "<group>"; };
+		C91296311D5D69FA009EE934 /* BmoViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BmoViewExtension.swift; sourceTree = "<group>"; };
 		CBE541EC5ABD7084E6CB7E8F1F0884E2 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CF1D90AB9FB5267C0D8B3BEAA94B3E1D /* AlamofireImage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AlamofireImage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFF04659DA0671BCB97AFE3B74C58000 /* Pods-BmoImageLoader_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-BmoImageLoader_Example-umbrella.h"; sourceTree = "<group>"; };
@@ -281,9 +281,8 @@
 		26E96D1113757D1DD02ACB68C8D61F7A /* ProgressAnimation */ = {
 			isa = PBXGroup;
 			children = (
-				35AD5092F1AFB50D6CD5343E69984229 /* BaseProgressAnimation.swift */,
 				9D9F3F893F2477B4EC59781C33AC8581 /* BmoProgressAnimator.swift */,
-				55C4DEAFB27D77C6F487FE2E37486957 /* BmoViewExtension.swift */,
+				35AD5092F1AFB50D6CD5343E69984229 /* BaseProgressAnimation.swift */,
 				7B76831A93E45534AFC5FA6AD26AE3D2 /* CircleBrushProgressAnimation.swift */,
 				5BA2632110329356B14EE3087439E95A /* CircleFillProgressAnimation.swift */,
 				09F62AD11A1A0D045B687FC10B5A1E3E /* CirclePaintProgressAnimation.swift */,
@@ -462,9 +461,10 @@
 			children = (
 				69B9AA0AE3736D17A160218C02C45F10 /* Helper */,
 				26E96D1113757D1DD02ACB68C8D61F7A /* ProgressAnimation */,
+				D15EC9A131EC4D8E171C2CC6B378C793 /* BmoPathExtension.swift */,
+				C91296311D5D69FA009EE934 /* BmoViewExtension.swift */,
 				05DA733557CC0A309C7A1968605A3E1D /* BmoImageViewExtension.swift */,
 				E88AFBA74A6A248194C16649F3EA7F40 /* BmoImageViewFactory.swift */,
-				D15EC9A131EC4D8E171C2CC6B378C793 /* BmoPathExtension.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -724,12 +724,12 @@
 			files = (
 				6CFC9FF894D1F77EAE529565348EEB7F /* BaseProgressAnimation.swift in Sources */,
 				2FA2D7CDB8DD57F9C5BBD20B58E05D7D /* BmoImageLoader-dummy.m in Sources */,
+				C91296331D5D6A65009EE934 /* BmoViewExtension.swift in Sources */,
 				BB0089927AD70C0CF3CD298F82A93BC8 /* BmoImageViewExtension.swift in Sources */,
 				BFD1AF59C1DA31A9304DDCF312F6B23D /* BmoImageViewFactory.swift in Sources */,
 				43AC6FFEC6970B68E8B969ADC4517340 /* BmoPathExtension.swift in Sources */,
 				517A85E63472527E9C4E8968AECE307F /* BmoProgressAnimator.swift in Sources */,
 				A1F4D9355422C4EC36C34CC24A8BE145 /* BmoShapeHelper.swift in Sources */,
-				66698376688847E87E1100AE523231BD /* BmoViewExtension.swift in Sources */,
 				0720B7A71EAA5003F99F79430C6F950E /* CircleBrushProgressAnimation.swift in Sources */,
 				9161ABCD19EE6B42C123A356630C64E9 /* CircleFillProgressAnimation.swift in Sources */,
 				E67C0369CEDE908AAFB1FE1C3F0AE9E2 /* CirclePaintProgressAnimation.swift in Sources */,

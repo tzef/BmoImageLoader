@@ -22,11 +22,26 @@ public enum BmoImageViewProgressStyle {
     case CircleBrush(borderShape: Bool)
     case CirclePaint(borderShape: Bool)
     case CircleFill(borderShape: Bool)
-    case ColorProgress(positionTop: Bool)
+    case ColorProgress(position: BmoProgressPosition)
     case PercentNumber
     case DefaultIndicator(indicatorStyle: UIActivityIndicatorViewStyle)
 }
+public enum BmoProgressPosition {
+    case PositionTop
+    case PositionCenter
+    case PositionBottom
+}
 public struct BmoImageViewFactory {
+    /**
+        It created a shape path maskLayer and apply to imageView
+        
+        - parameter imageView: The UIImageView that will be set maskLayer
+        - parameter shape: The mask shape defined in `BmoImageViewShape`
+     
+        ## Note ##
+        1. If the imageView already have a maskLayer, it will be orverridden
+        2. Make sure the imageView already layout finished
+     */
     public static func shape(imageView: UIImageView, shape: BmoImageViewShape) {
         imageView.layoutIfNeeded()
         
@@ -35,6 +50,17 @@ public struct BmoImageViewFactory {
         imageView.layer.mask = shapeLayer
     }
     
+    /**
+     It created a progressAnimator for the imageView
+     
+     - parameter imageView: The UIImageView that will be set progress animator
+     - parameter newImage: It can be the placeholder Image or the image will be set
+     - parameter style: The animation style shape defined in `BmoImageViewProgressStyle`
+     
+     ## Note ##
+     1. If the imageView already have a maskLayer, the animation will fit the path
+     2. If the imageView layout changed, animator will auto fit it
+     */
     public static func progressAnimation (
         imageView: UIImageView,
         newImage: UIImage?,
@@ -49,8 +75,8 @@ public struct BmoImageViewFactory {
             return CirclePaintProgressAnimation(imageView: imageView, newImage: newImage, borderShape: borderShape)
         case .CircleFill(let borderShape):
             return CircleFillProgressAnimation(imageView: imageView, newImage: newImage, borderShape: borderShape)
-        case .ColorProgress(let positionTop):
-            return ColorBarProgressAnimation(imageView: imageView, newImage: newImage, positionTop: positionTop)
+        case .ColorProgress(let position):
+            return ColorBarProgressAnimation(imageView: imageView, newImage: newImage, position: position)
         case .DefaultIndicator(let indicatorStyle):
             return DefaultIndicatorProgressAnimation(imageView: imageView, newImage: newImage, indicatorStyle: indicatorStyle)
         case .PercentNumber:

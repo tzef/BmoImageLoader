@@ -17,7 +17,7 @@ class BaseProgressAnimation: BmoProgressAnimator {
     // Progress Parameters
     var completionBlock: (BmoProgressCompletionResult<UIImage, NSError> -> Void)?
     var completionState = BmoProgressCompletionState.Proceed
-    var progress = NSProgress()
+    var progress = NSProgress(totalUnitCount: 100)
     var progressColor = UIColor.blackColor()
     var displayLink: CADisplayLink? = nil
     var percentFont: UIFont?

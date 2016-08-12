@@ -23,7 +23,7 @@ class PercentNumberProgressAnimation: BaseProgressAnimation, BmoProgressHelpProt
         
         self.imageView = imageView
         self.newImage = newImage
-        self.percentFont = UIFont.systemFontOfSize(30.0)
+        self.percentFont = UIFont.systemFontOfSize(18.0)
         self.containerView = BmoProgressHelpView(delegate: self)
         
         resetAnimation()

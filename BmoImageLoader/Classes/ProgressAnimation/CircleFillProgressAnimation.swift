@@ -46,7 +46,6 @@ class CircleFillProgressAnimation: BaseProgressAnimation, BmoProgressHelpProtoco
         imageView.image = self.newImage
         UIView.animateWithDuration(self.transitionDuration, animations: {
             self.darkerView.alpha = 0.0
-            self.containerView.alpha = 0.0
             }, completion: { (finished) in
                 self.completionBlock?(.Success(self.newImage))
                 imageView.bmo_removeProgressAnimation()

@@ -17,6 +17,8 @@ public protocol BmoProgressAnimator {
     func setProgressColor(color: UIColor) -> BmoProgressAnimator
     func setMarginPercent(percent: CGFloat) -> BmoProgressAnimator
     func setAnimationDuration(duration: NSTimeInterval) -> BmoProgressAnimator
+    
+    // For BmoImageViewProgressStyle.PercentNumber
     func setPercentFont(font: UIFont) -> BmoProgressAnimator
 }
 protocol BmoProgressHelpProtocol {

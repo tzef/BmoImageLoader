@@ -62,6 +62,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
+                                            <color key="backgroundColor" red="0.94117647058823528" green="0.97254901960784312" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                             <constraints>
                                                 <constraint firstItem="NjJ-2r-zCI" firstAttribute="leading" secondItem="eDT-7A-hfz" secondAttribute="leadingMargin" constant="8" id="20m-1M-cUs"/>
                                                 <constraint firstItem="PGD-11-ecP" firstAttribute="leading" secondItem="NjJ-2r-zCI" secondAttribute="trailing" constant="8" id="5qz-D1-8Aw"/>
