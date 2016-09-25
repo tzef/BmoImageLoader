@@ -133,7 +133,7 @@ class CircleBrushProgressAnimation: BaseProgressAnimation, BmoProgressHelpProtoc
                 let drawRect = CGRectMake(0.0, 0.0, 40, 40)
                 let outputImage = context.createCGImage(checkerBoard, fromRect: drawRect)
                 
-                darkerView.backgroundColor = UIColor(patternImage: UIImage(CGImage: outputImage))
+                darkerView.backgroundColor = UIColor(patternImage: UIImage(CGImage: outputImage!))
             } else {
                 darkerView.backgroundColor = UIColor.whiteColor()
             }

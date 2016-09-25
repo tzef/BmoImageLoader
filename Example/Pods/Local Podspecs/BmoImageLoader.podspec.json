@@ -1,9 +1,13 @@
 {
   "name": "BmoImageLoader",
-  "version": "0.1.0",
-  "summary": "A short description of BmoImageLoader.",
-  "description": "TODO: Add long description of the pod here.",
+  "version": "0.4.0",
+  "summary": "A progress animated component for UIImageView",
+  "description": "BmoImageLoader is a progress animated component for UIImageView\nImage downloader implementation and cache manager use AlamofireImage",
   "homepage": "https://github.com/tzef/BmoImageLoader",
+  "screenshots": [
+    "https://raw.githubusercontent.com/tzef/BmoImageLoader/master/Screenshot/animationStyle.png",
+    "https://raw.githubusercontent.com/tzef/BmoImageLoader/master/Screenshot/progressControl.png"
+  ],
   "license": {
     "type": "MIT",
     "file": "LICENSE"
@@ -13,7 +17,7 @@
   },
   "source": {
     "git": "https://github.com/tzef/BmoImageLoader.git",
-    "tag": "0.1.0"
+    "tag": "0.4.0"
   },
   "platforms": {
     "ios": "8.0"
@@ -22,7 +26,7 @@
   "frameworks": "UIKit",
   "dependencies": {
     "AlamofireImage": [
-      "~> 2.0"
+      "~> 2.5.0"
     ]
   }
 }
