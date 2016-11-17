@@ -11,19 +11,19 @@ import Alamofire
 import AlamofireImage
 
 enum BmoImageCatch {
-    case CatchDefault
-    case CatchNone
+    case catchDefault
+    case catchNone
 }
 extension UIImageView {
     func bmo_removeProgressAnimation() {
         for subView in self.subviews {
-            if subView.isKindOfClass(BmoProgressHelpView) || subView.isKindOfClass(BmoProgressImageView) {
+            if subView.isKind(of: BmoProgressHelpView.self) || subView.isKind(of: BmoProgressImageView.self) {
                 subView.removeFromSuperview()
             }
         }
         if let subLayers = self.layer.sublayers {
             for subLayer in subLayers {
-                if subLayer.isKindOfClass(BmoProgressShapeLayer) {
+                if subLayer.isKind(of: BmoProgressShapeLayer.self) {
                     subLayer.removeFromSuperlayer()
                 }
             }
@@ -32,10 +32,10 @@ extension UIImageView {
 
     // MARK: - Public
     public func bmo_setImageWithURL (
-        URL: NSURL,
+        _ URL: Foundation.URL,
         style: BmoImageViewProgressStyle,
         placeholderImage: UIImage? = nil,
-        completion: (Response<UIImage, NSError> -> Void)? = nil) {
+        completion: ((DataResponse<UIImage>) -> Void)? = nil) {
 
         let urlRequest = URLRequestWithURL(URL)
         guard !isURLRequestURLEqualToActiveRequestURL(urlRequest) else { return }
@@ -45,22 +45,26 @@ extension UIImageView {
         
         let imageDownloader = UIImageView.af_sharedImageDownloader
         let imageCache = imageDownloader.imageCache
-        
+
+        guard let request = urlRequest.urlRequest else {
+            return
+        }
+
         // Use the image from the image cache if it exists
-        if let image = imageCache?.imageForRequest(urlRequest.URLRequest, withAdditionalIdentifier: nil) {
-            let response = Response<UIImage, NSError>(
-                request: urlRequest.URLRequest,
+        if let image = imageCache?.image(for: request, withIdentifier: nil) {
+            let response = DataResponse<UIImage>(
+                request: request,
                 response: nil,
                 data: nil,
-                result: .Success(image)
+                result: .success(image)
             )
             completion?(response)
             
-            if let runAnimation = self.bmo_runAnimationIfCatched where runAnimation == true {
-                let animator = generateAnimator(placeholderImage, style: style, urlRequest: urlRequest.URLRequest, completion: completion)
+            if let runAnimation = self.bmo_runAnimationIfCatched, runAnimation == true {
+                let animator = generateAnimator(placeholderImage, style: style, urlRequest: request, completion: completion)
                 animator
                     .setNewImage(image)
-                    .setCompletionState(.Succeed)
+                    .setCompletionState(.succeed)
             } else {
                 self.image = image
             }
@@ -68,60 +72,61 @@ extension UIImageView {
         }
 
         // Generate progress animation if the image need to downlaod from internet
-        let animator = generateAnimator(placeholderImage, style: style, urlRequest: urlRequest.URLRequest, completion: completion)
-        let progrssHandler: ImageDownloader.ProgressHandler = {(bytesRead: Int64, totalBytesRead: Int64, totalExpectedBytesToRead: Int64) in
+        let animator = generateAnimator(placeholderImage, style: style, urlRequest: request, completion: completion)
+        let progrssHandler: ImageDownloader.ProgressHandler = {(progress) in
             animator
-                .setTotalUnitCount(totalExpectedBytesToRead)
-                .setCompletedUnitCount(totalBytesRead)
+                .setTotalUnitCount(progress.totalUnitCount)
+                .setCompletedUnitCount(progress.completedUnitCount)
         }
 
         // Generate a unique download id to check whether the active request has changed while downloading
-        let downloadID = NSUUID().UUIDString
+        let downloadID = UUID().uuidString
 
         // Download the image, then run the image transition or completion handler
-        let requestReceipt = imageDownloader.downloadImage (
-            URLRequest: urlRequest,
+        let requestReceipt = imageDownloader.download(
+            urlRequest,
             receiptID: downloadID,
             filter: nil,
             progress: progrssHandler,
-            progressQueue: dispatch_get_main_queue(),
+            progressQueue: DispatchQueue.main,
             completion: { [weak self] response in
                 guard let strongSelf = self else { return }
                 guard
                     strongSelf.isURLRequestURLEqualToActiveRequestURL(response.request) &&
                         strongSelf.af_activeRequestReceipt?.receiptID == downloadID
-                    else {
-                        return
-                }
+                    else { return }
 
                 if let image = response.result.value {
                     animator
                         .setNewImage(image)
-                        .setCompletionState(.Succeed)
+                        .setCompletionState(.succeed)
                 } else {
-                    animator.setCompletionState(BmoProgressCompletionState.Failed(error: response.result.error))
+                    animator.setCompletionState(BmoProgressCompletionState.failed(error: response.result.error as NSError?))
                 }
-                
+
                 strongSelf.af_activeRequestReceipt = nil
             }
         )
         
         af_activeRequestReceipt = requestReceipt
     }
-    public func bmo_runAnimationIfCatched(run: Bool) {
+    public func bmo_runAnimationIfCatched(_ run: Bool) {
         self.bmo_runAnimationIfCatched = run
     }
-    private func generateAnimator(newImage: UIImage?, style: BmoImageViewProgressStyle, urlRequest: NSURLRequest, completion: (Response<UIImage, NSError> -> Void)?) -> BmoProgressAnimator {
+    private func generateAnimator(_ newImage: UIImage?, style: BmoImageViewProgressStyle, urlRequest: URLRequest, completion: ((DataResponse<UIImage>) -> Void)?) -> BmoProgressAnimator {
         let animator = BmoImageViewFactory.progressAnimation(self, newImage: newImage, style: style)
         animator.setCompletionBlock { (animatorResult) in
             var errorMsg = ""
+            guard let request = urlRequest.urlRequest else {
+                return
+            }
             if animatorResult.isSuccess {
                 if let image = animatorResult.value {
-                    let response = Response<UIImage, NSError>(
-                        request: urlRequest.URLRequest,
+                    let response = DataResponse<UIImage>(
+                        request: request,
                         response: nil,
                         data: nil,
-                        result: .Success(image)
+                        result: .success(image)
                     )
                     completion?(response)
                 } else {
@@ -129,11 +134,11 @@ extension UIImageView {
                 }
             } else {
                 if let error = animatorResult.error {
-                    let response = Response<UIImage, NSError>(
-                        request: urlRequest.URLRequest,
+                    let response = DataResponse<UIImage>(
+                        request: request,
                         response: nil,
                         data: nil,
-                        result: .Failure(error)
+                        result: .failure(error)
                     )
                     completion?(response)
                 } else {
@@ -142,11 +147,11 @@ extension UIImageView {
             }
             if errorMsg != "" {
                 let userInfo = [NSLocalizedFailureReasonErrorKey: errorMsg]
-                let response = Response<UIImage, NSError>(
-                    request: urlRequest.URLRequest,
+                let response = DataResponse<UIImage>(
+                    request: request,
                     response: nil,
                     data: nil,
-                    result: .Failure(NSError(domain: Error.Domain, code: NSURLErrorCancelled, userInfo: userInfo))
+                    result: .failure(NSError(domain: request.url?.absoluteString ?? "Unknown Domain", code: NSURLErrorCancelled, userInfo: userInfo))
                 )
                 completion?(response)
             }
@@ -178,22 +183,25 @@ extension UIImageView {
     }
 
     // MARK: - Private AlamofireImage URL Request Helper Methods
-    private func URLRequestWithURL(URL: NSURL) -> NSURLRequest {
-        let mutableURLRequest = NSMutableURLRequest(URL: URL)
+    private func URLRequestWithURL(_ URL: Foundation.URL) -> URLRequest {
+        let mutableURLRequest = NSMutableURLRequest(url: URL)
         
         for mimeType in Request.acceptableImageContentTypes {
             mutableURLRequest.addValue(mimeType, forHTTPHeaderField: "Accept")
         }
         
-        return mutableURLRequest
+        return mutableURLRequest as URLRequest
     }
     
-    private func isURLRequestURLEqualToActiveRequestURL(URLRequest: URLRequestConvertible?) -> Bool {
-        if let currentRequest = af_activeRequestReceipt?.request.task.originalRequest
-            where currentRequest.URLString == URLRequest?.URLRequest.URLString {
+    private func isURLRequestURLEqualToActiveRequestURL(_ urlRequest: URLRequestConvertible?) -> Bool {
+        if
+            let currentRequestURL = af_activeRequestReceipt?.request.task?.originalRequest?.url,
+            let requestURL = urlRequest?.urlRequest?.url,
+            currentRequestURL == requestURL
+        {
             return true
         }
-        
+
         return false
     }
 }

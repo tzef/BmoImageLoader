@@ -32,8 +32,8 @@ class CircleFillProgressAnimation: BaseProgressAnimation, BmoProgressHelpProtoco
     }
 
     // MARK : - Override
-    override func displayLinkAction(dis: CADisplayLink) {
-        if let helpPoint = helpPointView.layer.presentationLayer()?.bounds.origin {
+    override func displayLinkAction(_ dis: CADisplayLink) {
+        if let helpPoint = helpPointView.layer.presentation()?.bounds.origin {
             let percent = helpPoint.x
             if percent == CGFloat(self.progress.fractionCompleted) {
                 self.displayLink?.invalidate()
@@ -42,21 +42,21 @@ class CircleFillProgressAnimation: BaseProgressAnimation, BmoProgressHelpProtoco
             containerViewMaskLayer.path = fillPath.insetPath(marginPercent * (1 - percent))
         }
     }
-    override func successAnimation(imageView: UIImageView) {
+    override func successAnimation(_ imageView: UIImageView) {
         imageView.image = self.newImage
-        UIView.animateWithDuration(self.transitionDuration, animations: {
+        UIView.animate(withDuration: self.transitionDuration, animations: {
             self.darkerView.alpha = 0.0
             }, completion: { (finished) in
-                self.completionBlock?(.Success(self.newImage))
+                self.completionBlock?(.success(self.newImage))
                 imageView.bmo_removeProgressAnimation()
         })
     }
-    override func failureAnimation(imageView: UIImageView, error: NSError?) {
-        UIView.animateWithDuration(self.transitionDuration, animations: {
+    override func failureAnimation(_ imageView: UIImageView, error: NSError?) {
+        UIView.animate(withDuration: self.transitionDuration, animations: {
             self.darkerView.alpha = 0.0
         }, completion: { (finished) in
             if finished {
-                self.completionBlock?(.Failure(error))
+                self.completionBlock?(.failure(error))
                 imageView.bmo_removeProgressAnimation()
             }
         })
@@ -70,15 +70,15 @@ class CircleFillProgressAnimation: BaseProgressAnimation, BmoProgressHelpProtoco
         strongImageView.layoutIfNeeded()
         strongImageView.bmo_removeProgressAnimation()
 
-        helpPointView.frame = CGRectZero
+        helpPointView.frame = CGRect.zero
         strongImageView.addSubview(helpPointView)
 
         strongImageView.addSubview(darkerView)
         if strongImageView.image != nil {
-            darkerView.backgroundColor = UIColor.blackColor()
+            darkerView.backgroundColor = UIColor.black
             darkerView.alpha = 0.4
         } else {
-            darkerView.backgroundColor = UIColor.whiteColor()
+            darkerView.backgroundColor = UIColor.white
         }
         darkerView.autoFit(strongImageView)
 
@@ -91,21 +91,21 @@ class CircleFillProgressAnimation: BaseProgressAnimation, BmoProgressHelpProtoco
         newImageView.autoFit(containerView)
 
         if borderShape == true {
-            if let maskLayer = strongImageView.layer.mask as? CAShapeLayer where maskLayer.path != nil {
+            if let maskLayer = strongImageView.layer.mask as? CAShapeLayer, maskLayer.path != nil {
                 fillPath = maskLayer.path!
             } else {
-                fillPath = CGPathCreateWithRect(strongImageView.bounds, nil)
+                fillPath = CGPath(rect: strongImageView.bounds, transform: nil)
             }
             containerViewMaskLayer.path = fillPath.insetPath(marginPercent)
         } else {
-            let path = CGPathCreateMutable()
+            let path = CGMutablePath()
             let radius = sqrt(pow(strongImageView.bounds.width / 2, 2) + pow(strongImageView.bounds.height / 2, 2))
-            CGPathMoveToPoint(path, nil, strongImageView.bounds.midX, strongImageView.bounds.midY - radius)
-            CGPathAddArc(path, nil, strongImageView.bounds.midX, strongImageView.bounds.midY, radius, CGFloat(-1 * M_PI_2), CGFloat(M_PI_2 * 3), false)
+            path.move(to: CGPoint(x: strongImageView.bounds.midX, y: strongImageView.bounds.midY - radius))
+            path.addArc(center: CGPoint(x: strongImageView.bounds.midX, y: strongImageView.bounds.midY), radius: radius, startAngle: CGFloat(-1 * M_PI_2), endAngle: CGFloat(M_PI_2 * 3), clockwise: false)
             fillPath = path
             containerViewMaskLayer.path = path.insetPath(marginPercent)
         }
-        containerViewMaskLayer.fillColor = UIColor.blackColor().CGColor
+        containerViewMaskLayer.fillColor = UIColor.black.cgColor
         containerView.layer.mask = containerViewMaskLayer
 
         if let image = newImage {
@@ -113,19 +113,19 @@ class CircleFillProgressAnimation: BaseProgressAnimation, BmoProgressHelpProtoco
         } else {
             newImageView.backgroundColor = progressColor
         }
-        newImageView.backgroundColor = UIColor.blackColor()
+        newImageView.backgroundColor = UIColor.black
         return self
     }
     
     //MARK: - ProgressHelpProtocol
-    func layoutChanged(target: AnyObject) {
+    func layoutChanged(_ target: AnyObject) {
         guard let strongImageView = self.imageView else {
             return
         }
-        if let maskLayer = strongImageView.layer.mask as? CAShapeLayer where maskLayer.path != nil {
+        if let maskLayer = strongImageView.layer.mask as? CAShapeLayer, maskLayer.path != nil {
             fillPath = maskLayer.path!
         } else {
-            fillPath = CGPathCreateWithRect(strongImageView.bounds, nil)
+            fillPath = CGPath(rect: strongImageView.bounds, transform: nil)
         }
     }
 }

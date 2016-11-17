@@ -29,11 +29,11 @@ class DefaultIndicatorProgressAnimation: BaseProgressAnimation, BmoProgressHelpP
     }
     
     // MARK : - Override
-    override func displayLinkAction(dis: CADisplayLink) {
-        if !indicator.isAnimating() {
+    override func displayLinkAction(_ dis: CADisplayLink) {
+        if !indicator.isAnimating {
             indicator.startAnimating()
         }
-        if let helpPoint = helpPointView.layer.presentationLayer()?.bounds.origin {
+        if let helpPoint = helpPointView.layer.presentation()?.bounds.origin {
             if helpPoint.x == CGFloat(self.progress.fractionCompleted) {
                 self.indicator.stopAnimating()
                 self.displayLink?.invalidate()
@@ -41,26 +41,26 @@ class DefaultIndicatorProgressAnimation: BaseProgressAnimation, BmoProgressHelpP
             }
         }
     }
-    override func successAnimation(imageView: UIImageView) {
+    override func successAnimation(_ imageView: UIImageView) {
         indicator.stopAnimating()
-        UIView.transitionWithView(
-            imageView,
+        UIView.transition(
+            with: imageView,
             duration: self.transitionDuration,
-            options: .TransitionCrossDissolve,
+            options: .transitionCrossDissolve,
             animations: {
                 self.newImageView.image = self.newImage
             }, completion: { (finished) in
                 var maskPath: UIBezierPath!
-                if let maskLayer = imageView.layer.mask as? CAShapeLayer where maskLayer.path != nil {
-                    maskPath = UIBezierPath(CGPath: maskLayer.path!)
+                if let maskLayer = imageView.layer.mask as? CAShapeLayer, maskLayer.path != nil {
+                    maskPath = UIBezierPath(cgPath: maskLayer.path!)
                 } else {
                     maskPath = UIBezierPath(rect: imageView.bounds)
                 }
-                self.containerViewMaskLayer.path = maskPath.CGPath
+                self.containerViewMaskLayer.path = maskPath.cgPath
                 CATransaction.begin()
                 CATransaction.setCompletionBlock({
                     self.imageView?.image = self.newImage
-                    self.completionBlock?(.Success(self.newImage))
+                    self.completionBlock?(.success(self.newImage))
                     imageView.bmo_removeProgressAnimation()
                 })
                 let animateEnlarge = CABasicAnimation(keyPath: "transform")
@@ -71,20 +71,20 @@ class DefaultIndicatorProgressAnimation: BaseProgressAnimation, BmoProgressHelpP
                 transform3D = CATransform3DTranslate(transform3D, translatePoint.x, translatePoint.y, 0)
                 transform3D = CATransform3DScale(transform3D, 1 - self.marginPercent, 1 - self.marginPercent, 1)
                 animateEnlarge.duration = self.enlargeDuration
-                animateEnlarge.fromValue = NSValue(CATransform3D: transform3D)
-                self.containerViewMaskLayer.addAnimation(animateEnlarge, forKey: "enlarge")
+                animateEnlarge.fromValue = NSValue(caTransform3D: transform3D)
+                self.containerViewMaskLayer.add(animateEnlarge, forKey: "enlarge")
                 CATransaction.commit()
             }
         )
     }
-    override func failureAnimation(imageView: UIImageView, error: NSError?) {
+    override func failureAnimation(_ imageView: UIImageView, error: NSError?) {
         indicator.stopAnimating()
-        UIView.animateWithDuration(self.transitionDuration, animations: {
+        UIView.animate(withDuration: self.transitionDuration, animations: {
             self.darkerView.alpha = 0.0
             self.newImageView.alpha = 0.0
         }, completion: { (finished) in
             if finished {
-                self.completionBlock?(.Failure(error))
+                self.completionBlock?(.failure(error))
                 imageView.bmo_removeProgressAnimation()
             }
         })
@@ -98,15 +98,15 @@ class DefaultIndicatorProgressAnimation: BaseProgressAnimation, BmoProgressHelpP
         strongImageView.layoutIfNeeded()
         strongImageView.bmo_removeProgressAnimation()
         
-        helpPointView.frame = CGRectZero
+        helpPointView.frame = CGRect.zero
         strongImageView.addSubview(helpPointView)
         
         strongImageView.addSubview(darkerView)
         if strongImageView.image != nil {
-            darkerView.backgroundColor = UIColor.blackColor()
+            darkerView.backgroundColor = UIColor.black
             darkerView.alpha = 0.4
         } else {
-            darkerView.backgroundColor = UIColor.whiteColor()
+            darkerView.backgroundColor = UIColor.white
         }
         darkerView.autoFit(strongImageView)
         
@@ -118,10 +118,10 @@ class DefaultIndicatorProgressAnimation: BaseProgressAnimation, BmoProgressHelpP
         containerView.addSubview(newImageView)
         newImageView.autoFit(containerView)
         
-        if let maskLayer = strongImageView.layer.mask as? CAShapeLayer where maskLayer.path != nil {
+        if let maskLayer = strongImageView.layer.mask as? CAShapeLayer, maskLayer.path != nil {
             containerViewMaskLayer.path = maskLayer.path!.insetPath(marginPercent)
         } else {
-            containerViewMaskLayer.path = CGPathCreateWithRect(strongImageView.bounds, nil).insetPath(marginPercent)
+            containerViewMaskLayer.path = CGPath(rect: strongImageView.bounds, transform: nil).insetPath(marginPercent)
         }
         containerView.layer.mask = containerViewMaskLayer
         
@@ -137,14 +137,14 @@ class DefaultIndicatorProgressAnimation: BaseProgressAnimation, BmoProgressHelpP
     }
     
     //MARK: - ProgressHelpProtocol
-    func layoutChanged(target: AnyObject) {
+    func layoutChanged(_ target: AnyObject) {
         guard let strongImageView = self.imageView else {
             return
         }
-        if let maskLayer = strongImageView.layer.mask as? CAShapeLayer where maskLayer.path != nil {
+        if let maskLayer = strongImageView.layer.mask as? CAShapeLayer, maskLayer.path != nil {
             containerViewMaskLayer.path = maskLayer.path!.insetPath(marginPercent)
         } else {
-            containerViewMaskLayer.path = CGPathCreateWithRect(strongImageView.bounds, nil).insetPath(marginPercent)
+            containerViewMaskLayer.path = CGPath(rect: strongImageView.bounds, transform: nil).insetPath(marginPercent)
         }
     }
 }

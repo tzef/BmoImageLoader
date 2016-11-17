@@ -15,7 +15,7 @@ class ColorBarProgressAnimation: BaseProgressAnimation {
     var newImageView = BmoProgressImageView()
     let fillBarView = BmoProgressHelpView()
     let fillBarMaskLayer = CAShapeLayer()
-    var position = BmoProgressPosition.PositionCenter
+    var position = BmoProgressPosition.positionCenter
     let barHeight = 3
     
     convenience init(imageView: UIImageView, newImage: UIImage?, position: BmoProgressPosition) {
@@ -30,45 +30,45 @@ class ColorBarProgressAnimation: BaseProgressAnimation {
     }
     
     // MARK : - Override
-    override func displayLinkAction(dis: CADisplayLink) {
-        if let helpPoint = helpPointView.layer.presentationLayer()?.bounds.origin {
+    override func displayLinkAction(_ dis: CADisplayLink) {
+        if let helpPoint = helpPointView.layer.presentation()?.bounds.origin {
             if helpPoint.x == CGFloat(self.progress.fractionCompleted) {
                 self.displayLink?.invalidate()
                 self.displayLink = nil
             }
             let width = fillBarView.bounds.width * helpPoint.x
-            fillBarMaskLayer.path = CGPathCreateWithRect(CGRectMake(0, 0, width, fillBarView.bounds.height), nil)
+            fillBarMaskLayer.path = CGPath(rect: CGRect(x: 0, y: 0, width: width, height: fillBarView.bounds.height), transform: nil)
         }
     }
-    override func successAnimation(imageView: UIImageView) {
+    override func successAnimation(_ imageView: UIImageView) {
         self.fillBarView.removeFromSuperview()
-        UIView.transitionWithView(
-            imageView,
+        UIView.transition(
+            with: imageView,
             duration: self.transitionDuration,
-            options: .TransitionCrossDissolve,
+            options: .transitionCrossDissolve,
             animations: {
                 self.newImageView.image = self.newImage
             }, completion: { (finished) in
                 imageView.image = self.newImage
-                UIView.animateWithDuration(self.transitionDuration, animations: {
+                UIView.animate(withDuration: self.transitionDuration, animations: {
                     self.darkerView.alpha = 0.0
                     self.newImageView.alpha = 0.0
                 }, completion: { (finished) in
                     self.imageView?.image = self.newImageView.image
-                    self.completionBlock?(.Success(self.newImage))
+                    self.completionBlock?(.success(self.newImage))
                     imageView.bmo_removeProgressAnimation()
                 })
             }
         )
     }
-    override func failureAnimation(imageView: UIImageView, error: NSError?) {
+    override func failureAnimation(_ imageView: UIImageView, error: NSError?) {
         self.fillBarView.removeFromSuperview()
-        UIView.animateWithDuration(self.transitionDuration, animations: {
+        UIView.animate(withDuration: self.transitionDuration, animations: {
             self.darkerView.alpha = 0.0
             self.newImageView.alpha = 0.0
             }, completion: { (finished) in
                 if finished {
-                    self.completionBlock?(.Failure(error))
+                    self.completionBlock?(.failure(error))
                     imageView.bmo_removeProgressAnimation()
                 }
         })
@@ -82,7 +82,7 @@ class ColorBarProgressAnimation: BaseProgressAnimation {
         strongImageView.layoutIfNeeded()
         strongImageView.bmo_removeProgressAnimation()
         
-        helpPointView.frame = CGRectZero
+        helpPointView.frame = CGRect.zero
         strongImageView.addSubview(helpPointView)
         
         strongImageView.addSubview(darkerView)
@@ -100,18 +100,18 @@ class ColorBarProgressAnimation: BaseProgressAnimation {
         fillBarView.layer.mask = fillBarMaskLayer
         containerView.addSubview(fillBarView)
         switch position {
-        case .PositionTop:
+        case .positionTop:
             fillBarView.autoFitTop(containerView, height: CGFloat(barHeight))
-        case .PositionCenter:
+        case .positionCenter:
             fillBarView.autoFitCenterVertical(containerView, height: CGFloat(barHeight))
-        case .PositionBottom:
+        case .positionBottom:
             fillBarView.autoFitBottom(containerView, height: CGFloat(barHeight))
         }
-        fillBarMaskLayer.path = CGPathCreateMutable()
+        fillBarMaskLayer.path = CGMutablePath()
         
         if let image = newImage {
             newImageView.image = image
-            darkerView.backgroundColor = UIColor.blackColor()
+            darkerView.backgroundColor = UIColor.black
             darkerView.alpha = 0.4
         }
         

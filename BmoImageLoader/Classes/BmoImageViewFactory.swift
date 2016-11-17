@@ -9,27 +9,27 @@
 import UIKit
 import AlamofireImage
 public enum BmoImageViewShape {
-    case RoundedRect(corner: CGFloat)
-    case Triangle
-    case Pentagon
-    case Ellipse
-    case Circle
-    case Heart
-    case Star
+    case roundedRect(corner: CGFloat)
+    case triangle
+    case pentagon
+    case ellipse
+    case circle
+    case heart
+    case star
 }
 public enum BmoImageViewProgressStyle {
-    case CirclePie(borderShape: Bool)
-    case CircleBrush(borderShape: Bool)
-    case CirclePaint(borderShape: Bool)
-    case CircleFill(borderShape: Bool)
-    case ColorProgress(position: BmoProgressPosition)
-    case PercentNumber
-    case DefaultIndicator(indicatorStyle: UIActivityIndicatorViewStyle)
+    case circlePie(borderShape: Bool)
+    case circleBrush(borderShape: Bool)
+    case circlePaint(borderShape: Bool)
+    case circleFill(borderShape: Bool)
+    case colorProgress(position: BmoProgressPosition)
+    case percentNumber
+    case defaultIndicator(indicatorStyle: UIActivityIndicatorViewStyle)
 }
 public enum BmoProgressPosition {
-    case PositionTop
-    case PositionCenter
-    case PositionBottom
+    case positionTop
+    case positionCenter
+    case positionBottom
 }
 public struct BmoImageViewFactory {
     /**
@@ -42,7 +42,7 @@ public struct BmoImageViewFactory {
         1. If the imageView already have a maskLayer, it will be orverridden
         2. Make sure the imageView already layout finished
      */
-    public static func shape(imageView: UIImageView, shape: BmoImageViewShape) {
+    public static func shape(_ imageView: UIImageView, shape: BmoImageViewShape) {
         imageView.layoutIfNeeded()
         
         let shapeLayer = CAShapeLayer()
@@ -62,24 +62,24 @@ public struct BmoImageViewFactory {
      2. If the imageView layout changed, animator will auto fit it
      */
     public static func progressAnimation (
-        imageView: UIImageView,
+        _ imageView: UIImageView,
         newImage: UIImage?,
         style: BmoImageViewProgressStyle) -> BmoProgressAnimator {
 
         switch style {
-        case .CirclePie(let borderShape):
+        case .circlePie(let borderShape):
             return CirclePieProgressAnimation(imageView: imageView, newImage: newImage, borderShape: borderShape)
-        case .CircleBrush(let borderShape):
+        case .circleBrush(let borderShape):
             return CircleBrushProgressAnimation(imageView: imageView, newImage: newImage, borderShape: borderShape)
-        case .CirclePaint(let borderShape):
+        case .circlePaint(let borderShape):
             return CirclePaintProgressAnimation(imageView: imageView, newImage: newImage, borderShape: borderShape)
-        case .CircleFill(let borderShape):
+        case .circleFill(let borderShape):
             return CircleFillProgressAnimation(imageView: imageView, newImage: newImage, borderShape: borderShape)
-        case .ColorProgress(let position):
+        case .colorProgress(let position):
             return ColorBarProgressAnimation(imageView: imageView, newImage: newImage, position: position)
-        case .DefaultIndicator(let indicatorStyle):
+        case .defaultIndicator(let indicatorStyle):
             return DefaultIndicatorProgressAnimation(imageView: imageView, newImage: newImage, indicatorStyle: indicatorStyle)
-        case .PercentNumber:
+        case .percentNumber:
             return PercentNumberProgressAnimation(imageView: imageView, newImage: newImage)
         }
     }

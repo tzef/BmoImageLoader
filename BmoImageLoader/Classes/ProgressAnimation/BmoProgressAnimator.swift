@@ -9,31 +9,32 @@
 import UIKit
 
 public protocol BmoProgressAnimator {
-    func setTotalUnitCount(count: Int64) -> BmoProgressAnimator
-    func setCompletedUnitCount(count: Int64) -> BmoProgressAnimator
-    func setCompletionState(state: BmoProgressCompletionState) -> BmoProgressAnimator
-    func setCompletionBlock(completion: (BmoProgressCompletionResult<UIImage, NSError> -> Void)? ) -> BmoProgressAnimator
-    func setNewImage(image: UIImage) -> BmoProgressAnimator
-    func setProgressColor(color: UIColor) -> BmoProgressAnimator
-    func setMarginPercent(percent: CGFloat) -> BmoProgressAnimator
-    func setAnimationDuration(duration: NSTimeInterval) -> BmoProgressAnimator
+    func setTotalUnitCount(_ count: Int64) -> BmoProgressAnimator
+    func setCompletedUnitCount(_ count: Int64) -> BmoProgressAnimator
+    func setCompletionState(_ state: BmoProgressCompletionState) -> BmoProgressAnimator
+    func setCompletionBlock(_ completion: ((BmoProgressCompletionResult<UIImage, NSError>) -> Void)? ) -> BmoProgressAnimator
+    func setNewImage(_ image: UIImage) -> BmoProgressAnimator
+    func setProgressColor(_ color: UIColor) -> BmoProgressAnimator
+    func setMarginPercent(_ percent: CGFloat) -> BmoProgressAnimator
+    func setAnimationDuration(_ duration: TimeInterval) -> BmoProgressAnimator
+    func closure()
     
     // For BmoImageViewProgressStyle.PercentNumber
-    func setPercentFont(font: UIFont) -> BmoProgressAnimator
+    func setPercentFont(_ font: UIFont) -> BmoProgressAnimator
 }
 protocol BmoProgressHelpProtocol {
-    func layoutChanged(target: AnyObject)
+    func layoutChanged(_ target: AnyObject)
 }
 public enum BmoProgressCompletionResult<Value, Error: NSError> {
-    case Success(Value?)
-    case Failure(Error?)
+    case success(Value?)
+    case failure(Error?)
 
     /// Returns `true` if the result is a success, `false` otherwise.
     public var isSuccess: Bool {
         switch self {
-        case .Success:
+        case .success:
             return true
-        case .Failure:
+        case .failure:
             return false
         }
     }
@@ -46,9 +47,9 @@ public enum BmoProgressCompletionResult<Value, Error: NSError> {
     /// Returns the associated value if the result is a success, `nil` otherwise.
     public var value: Value? {
         switch self {
-        case .Success(let value):
+        case .success(let value):
             return value
-        case .Failure:
+        case .failure:
             return nil
         }
     }
@@ -56,17 +57,17 @@ public enum BmoProgressCompletionResult<Value, Error: NSError> {
     /// Returns the associated error value if the result is a failure, `nil` otherwise.
     public var error: Error? {
         switch self {
-        case .Success:
+        case .success:
             return nil
-        case .Failure(let error):
+        case .failure(let error):
             return error
         }
     }
 }
 public enum BmoProgressCompletionState {
-    case Proceed
-    case Succeed
-    case Failed(error: NSError?)
+    case proceed
+    case succeed
+    case failed(error: NSError?)
 }
 
 class BmoProgressHelpView: UIView {

@@ -24,11 +24,13 @@ Image downloader implementation and cache manager use AlamofireImage
 ## Requirements
 
 iOS 8.0+ 
+Xcode 8.0+
+Swift 3.0+
 
 ## Dependencies
 
-Alamofire 3.3+
-AlamofireImage 2.0
+Alamofire 4.0+
+AlamofireImage 3.1
 
 ## BmoImageViewFactory
 #### Shape ImageView

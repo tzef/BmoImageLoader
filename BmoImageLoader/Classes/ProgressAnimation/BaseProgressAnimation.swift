@@ -15,10 +15,10 @@ class BaseProgressAnimation: BmoProgressAnimator {
     let helpPointView = BmoProgressHelpView()
 
     // Progress Parameters
-    var completionBlock: (BmoProgressCompletionResult<UIImage, NSError> -> Void)?
-    var completionState = BmoProgressCompletionState.Proceed
-    var progress = NSProgress(totalUnitCount: 100)
-    var progressColor = UIColor.blackColor()
+    var completionBlock: ((BmoProgressCompletionResult<UIImage, NSError>) -> Void)?
+    var completionState = BmoProgressCompletionState.proceed
+    var progress = Progress(totalUnitCount: 100)
+    var progressColor = UIColor.black
     var displayLink: CADisplayLink? = nil
     var percentFont: UIFont?
 
@@ -29,58 +29,58 @@ class BaseProgressAnimation: BmoProgressAnimator {
     var marginPercent: CGFloat = 0.1
 
     // MARK: - Public
-    @objc func displayLinkAction(dis: CADisplayLink) {
+    @objc func displayLinkAction(_ dis: CADisplayLink) {
     }
-    func successAnimation(imageView: UIImageView) {
+    func successAnimation(_ imageView: UIImageView) {
     }
-    func failureAnimation(imageView: UIImageView, error: NSError?) {
+    func failureAnimation(_ imageView: UIImageView, error: NSError?) {
     }
 
     // MARK : - Private
-    private func initDisplayLink() {
+    fileprivate func initDisplayLink() {
         displayLink?.invalidate()
         displayLink = nil
         displayLink = CADisplayLink(target: self, selector: #selector(BaseProgressAnimation.displayLinkAction(_:)))
-        displayLink?.addToRunLoop(NSRunLoop.mainRunLoop(), forMode: UITrackingRunLoopMode)
-        displayLink?.addToRunLoop(NSRunLoop.mainRunLoop(), forMode: NSDefaultRunLoopMode)
+        displayLink?.add(to: RunLoop.main, forMode: RunLoopMode.UITrackingRunLoopMode)
+        displayLink?.add(to: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
     }
     
     // MARK: - ProgressAnimator Protocol
-    func setCompletionBlock(completion: (BmoProgressCompletionResult<UIImage, NSError> -> Void)?) -> BmoProgressAnimator {
+    func setCompletionBlock(_ completion: ((BmoProgressCompletionResult<UIImage, NSError>) -> Void)?) -> BmoProgressAnimator {
         self.completionBlock = completion
         return self
     }
-    func setCompletionState(state: BmoProgressCompletionState) -> BmoProgressAnimator {
+    func setCompletionState(_ state: BmoProgressCompletionState) -> BmoProgressAnimator {
         self.completionState = state
         switch self.completionState {
-        case .Succeed:
+        case .succeed:
             setCompletedUnitCount(progress.totalUnitCount)
-        case .Failed(_):
+        case .failed(_):
             setCompletedUnitCount(0)
         default:
             break
         }
         return self
     }
-    func setTotalUnitCount(count: Int64) -> BmoProgressAnimator {
+    func setTotalUnitCount(_ count: Int64) -> BmoProgressAnimator {
         progress.totalUnitCount = count
         return self
     }
-    func setCompletedUnitCount(count: Int64) -> BmoProgressAnimator {
+    func setCompletedUnitCount(_ count: Int64) -> BmoProgressAnimator {
         guard let strongImageView = self.imageView else {
             return self
         }
         progress.completedUnitCount = count
         initDisplayLink()
-        helpPointView.bounds = helpPointView.layer.presentationLayer()?.bounds ?? helpPointView.bounds
+        helpPointView.bounds = helpPointView.layer.presentation()?.bounds ?? helpPointView.bounds
         helpPointView.layer.removeAllAnimations()
-        UIView.animateWithDuration(progressDuration, animations: {
-            self.helpPointView.bounds = CGRectMake(CGFloat(self.progress.fractionCompleted), 0, 0, 0)
-        }) { (finished) in
+        UIView.animate(withDuration: progressDuration, animations: {
+            self.helpPointView.bounds = CGRect(x: CGFloat(self.progress.fractionCompleted), y: 0, width: 0, height: 0)
+        }, completion: { (finished) in
             if finished {
                 if self.progress.completedUnitCount >= self.progress.totalUnitCount {
                     switch self.completionState {
-                    case .Succeed:
+                    case .succeed:
                         self.successAnimation(strongImageView)
                     default:
                         break
@@ -88,40 +88,47 @@ class BaseProgressAnimation: BmoProgressAnimator {
                 }
                 if self.progress.completedUnitCount == 0 {
                     switch self.completionState {
-                    case .Failed(let error):
+                    case .failed(let error):
                         self.failureAnimation(strongImageView, error: error)
                     default:
                         break
                     }
                 }
             }
-        }
+        }) 
         return self
     }
     func resetAnimation() -> BmoProgressAnimator {
         return self
     }
-    func setAnimationDuration(duration: NSTimeInterval) -> BmoProgressAnimator {
+    func setAnimationDuration(_ duration: TimeInterval) -> BmoProgressAnimator {
         self.progressDuration = duration
         return self
     }
-    func setNewImage(image: UIImage) -> BmoProgressAnimator {
+    func setNewImage(_ image: UIImage) -> BmoProgressAnimator {
         self.newImage = image
         return self
     }
-    func setMarginPercent(percent: CGFloat) -> BmoProgressAnimator {
+    func setMarginPercent(_ percent: CGFloat) -> BmoProgressAnimator {
         self.marginPercent = percent
         resetAnimation()
         return self
     }
-    func setProgressColor(color: UIColor) -> BmoProgressAnimator {
+    func setProgressColor(_ color: UIColor) -> BmoProgressAnimator {
         self.progressColor = color
         resetAnimation()
         return self
     }
-    func setPercentFont(font: UIFont) -> BmoProgressAnimator {
+    func setPercentFont(_ font: UIFont) -> BmoProgressAnimator {
         self.percentFont = font
         resetAnimation()
         return self
+    }
+
+    /**
+        Do nothing, in order to avoid the warning about result of call is unused
+    */
+    func closure() {
+        return
     }
 }

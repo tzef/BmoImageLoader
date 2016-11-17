@@ -9,78 +9,74 @@
 import UIKit
 
 struct BmoShapeHelper {
-    static func getShapePath(shape: BmoImageViewShape, rect: CGRect) -> CGPath {
+    static func getShapePath(_ shape: BmoImageViewShape, rect: CGRect) -> CGPath {
         switch shape {
-        case .RoundedRect(let corner):
-            return CGPathCreateWithRoundedRect(rect, corner, corner, nil)
-        case .Triangle:
-            let path = CGPathCreateMutable()
-            CGPathMoveToPoint(path, nil, rect.midX, rect.minY)
-            CGPathAddLineToPoint(path, nil, rect.minX, rect.maxY)
-            CGPathAddLineToPoint(path, nil, rect.maxX, rect.maxY)
-            CGPathCloseSubpath(path)
+        case .roundedRect(let corner):
+            return CGPath(roundedRect: rect, cornerWidth: corner, cornerHeight: corner, transform: nil)
+        case .triangle:
+            let path = CGMutablePath()
+            path.move(to: CGPoint(x: rect.midX, y: rect.minY))
+            path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
+            path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
+            path.closeSubpath()
             return path
-        case .Pentagon:
+        case .pentagon:
             let adjustment = CGFloat(360 / 5 / 4)
-            let path = CGPathCreateMutable()
+            let path = CGMutablePath()
             let radius = min(rect.width, rect.height) / 2
             let startPoint = CGPoint(x: rect.midX, y: rect.midY)
             let points = polygonPointsArray(5, x: startPoint.x, y: startPoint.y, radius: radius, adjustment: adjustment)
-            CGPathMoveToPoint(path, nil, points[0].x, points[0].y)
+            path.move(to: CGPoint(x: points[0].x, y: points[0].y))
             for p in points {
-                CGPathAddLineToPoint(path, nil, p.x, p.y)
+                path.addLine(to: CGPoint(x: p.x, y: p.y))
             }
-            CGPathCloseSubpath(path)
+            path.closeSubpath()
             return path
-        case .Ellipse:
-            return CGPathCreateWithEllipseInRect(rect, nil)
-        case .Circle:
-            let path = CGPathCreateMutable()
-            CGPathMoveToPoint(path, nil, rect.midX, rect.minY)
-            CGPathAddArc(path, nil, rect.midX, rect.midY, min(rect.width, rect.height) / 2, CGFloat(-1 * M_PI_2), CGFloat(M_PI_2 * 3), false)
+        case .ellipse:
+            return CGPath(ellipseIn: rect, transform: nil)
+        case .circle:
+            let path = CGMutablePath()
+            path.move(to: CGPoint(x: rect.midX, y: rect.minY))
+            path.addArc(center: CGPoint(x: rect.midX, y: rect.midY), radius: min(rect.width, rect.height) / 2, startAngle: CGFloat(-1 * M_PI_2), endAngle: CGFloat(M_PI_2 * 3), clockwise: false)
             return path
-        case .Heart:
-            let path = CGPathCreateMutable()
-            CGPathMoveToPoint(path, nil, rect.midX, rect.minY + rect.height / 4)
-            CGPathAddCurveToPoint(path, nil,
-                                  rect.midX - rect.width / 16, rect.minY,
-                                  rect.minX, rect.minY,
-                                  rect.minX + rect.width / 16, rect.midY)
-            CGPathAddCurveToPoint(path, nil,
-                                  rect.minX + rect.width / 8, rect.midY + rect.height * 3 / 8,
-                                  rect.midX - rect.width / 16, rect.maxY - rect.height / 16,
-                                  rect.midX, rect.maxY)
-            CGPathAddCurveToPoint(path, nil,
-                                  rect.midX + rect.width / 16, rect.maxY - rect.height / 16,
-                                  rect.maxX - rect.width / 8, rect.midY + rect.height * 3 / 8,
-                                  rect.maxX - rect.width / 16, rect.midY)
-            CGPathAddCurveToPoint(path, nil,
-                                  rect.maxX, rect.minY,
-                                  rect.midX + rect.width / 16, rect.minY,
-                                  rect.midX, rect.minY + rect.height / 4)
-            CGPathCloseSubpath(path)
+        case .heart:
+            let path = CGMutablePath()
+            path.move(to: CGPoint(x: rect.midX, y: rect.minY + rect.height / 4))
+            path.addCurve(to: CGPoint(x: rect.minX + rect.width / 16, y: rect.midY),
+                          control1: CGPoint(x: rect.midX - rect.width / 16, y: rect.minY),
+                          control2: CGPoint(x: rect.minX, y: rect.minY))
+            path.addCurve(to: CGPoint(x: rect.midX, y: rect.maxY),
+                          control1: CGPoint(x: rect.minX + rect.width / 8, y: rect.midY + rect.height * 3 / 8),
+                          control2: CGPoint(x: rect.midX - rect.width / 16, y: rect.maxY - rect.height / 16))
+            path.addCurve(to: CGPoint(x: rect.maxX - rect.width / 16, y: rect.midY),
+                          control1: CGPoint(x: rect.midX + rect.width / 16, y: rect.maxY - rect.height / 16),
+                          control2: CGPoint(x: rect.maxX - rect.width / 8, y: rect.midY + rect.height * 3 / 8))
+            path.addCurve(to: CGPoint(x: rect.midX, y: rect.minY + rect.height / 4),
+                          control1: CGPoint(x: rect.maxX, y: rect.minY),
+                          control2: CGPoint(x: rect.midX + rect.width / 16, y: rect.minY))
+            path.closeSubpath()
             return path
-        case .Star:
+        case .star:
             let adjustment_outside = CGFloat(360 / 5 / 4)
             let adjustment_inside = CGFloat(360 / 5 / 4) - CGFloat(360 / 5 / 2)
-            let path = CGPathCreateMutable()
+            let path = CGMutablePath()
             let radius = min(rect.width, rect.height) / 2
             let startPoint = CGPoint(x: rect.midX, y: rect.midY)
             let points_outside = polygonPointsArray(5, x: startPoint.x, y: startPoint.y, radius: radius, adjustment: adjustment_outside)
             let points_inside = polygonPointsArray(5, x: startPoint.x, y: startPoint.y, radius: radius / 2, adjustment: adjustment_inside)
             var i = 0
-            CGPathMoveToPoint(path, nil, points_outside[0].x, points_outside[0].y)
+            path.move(to: CGPoint(x: points_outside[0].x, y: points_outside[0].y))
             for p in points_outside {
-                CGPathAddLineToPoint(path, nil, p.x, p.y)
-                CGPathAddLineToPoint(path, nil, points_inside[i].x, points_inside[i].y)
+                path.addLine(to: CGPoint(x: p.x, y: p.y))
+                path.addLine(to: CGPoint(x: points_inside[i].x, y: points_inside[i].y))
                 i += 1
             }
-            CGPathCloseSubpath(path)
+            path.closeSubpath()
             return path
         }
     }
     
-    static func polygonPointsArray(sides: Int, x: CGFloat, y: CGFloat, radius: CGFloat, adjustment: CGFloat = 0) -> [CGPoint] {
+    static func polygonPointsArray(_ sides: Int, x: CGFloat, y: CGFloat, radius: CGFloat, adjustment: CGFloat = 0) -> [CGPoint] {
         let angle = degreeToRadians(360 / CGFloat(sides))
         var points = [CGPoint]()
         var i = sides
@@ -93,10 +89,10 @@ struct BmoShapeHelper {
         return points
     }
     
-    static func degreeToRadians(value: CGFloat) -> CGFloat {
+    static func degreeToRadians(_ value: CGFloat) -> CGFloat {
         return CGFloat(M_PI) * value / 180.0
     }
-    static func radiansToDegrees(value: CGFloat) -> CGFloat {
+    static func radiansToDegrees(_ value: CGFloat) -> CGFloat {
         return value * 180.0 / CGFloat(M_PI)
     }
 }

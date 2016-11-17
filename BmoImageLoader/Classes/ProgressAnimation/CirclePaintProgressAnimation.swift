@@ -29,13 +29,13 @@ class CirclePaintProgressAnimation: BaseProgressAnimation, BmoProgressHelpProtoc
         self.containerView = BmoProgressHelpView(delegate: self)
 
         marginPercent = (borderShape ? 0.1 : 0.5)
-        progressColor = UIColor.whiteColor()
+        progressColor = UIColor.white
         resetAnimation()
     }
 
     // MARK : - Override
-    override func displayLinkAction(dis: CADisplayLink) {
-        if let helpPoint = helpPointView.layer.presentationLayer()?.bounds.origin {
+    override func displayLinkAction(_ dis: CADisplayLink) {
+        if let helpPoint = helpPointView.layer.presentation()?.bounds.origin {
             if helpPoint.x == CGFloat(self.progress.fractionCompleted) {
                 self.displayLink?.invalidate()
                 self.displayLink = nil
@@ -47,43 +47,43 @@ class CirclePaintProgressAnimation: BaseProgressAnimation, BmoProgressHelpProtoc
                                           startAngle: startAngle,
                                           endAngle: helpPoint.x * CGFloat(M_PI * 2) + startAngle,
                                           clockwise: true)
-            circlePath.addLineToPoint(newImageView.center)
-            fillCircleMaskLayer.path = circlePath.CGPath
+            circlePath.addLine(to: newImageView.center)
+            fillCircleMaskLayer.path = circlePath.cgPath
         }
     }
-    override func successAnimation(imageView: UIImageView) {
+    override func successAnimation(_ imageView: UIImageView) {
         if self.borderShape == false {
             imageView.image = self.newImage
             circleShapeLayer.removeFromSuperlayer()
             fillCircleShapeLayer.removeFromSuperlayer()
-            UIView.animateWithDuration(self.transitionDuration, animations: {
+            UIView.animate(withDuration: self.transitionDuration, animations: {
                 self.darkerView.alpha = 0.0
                 self.newImageView.alpha = 0.0
                 }, completion: { (finished) in
-                    self.completionBlock?(.Success(self.newImage))
+                    self.completionBlock?(.success(self.newImage))
                     imageView.bmo_removeProgressAnimation()
             })
         } else {
-            UIView.transitionWithView(
-                imageView,
+            UIView.transition(
+                with: imageView,
                 duration: self.transitionDuration,
-                options: .TransitionCrossDissolve,
+                options: .transitionCrossDissolve,
                 animations: {
                     self.newImageView.image = self.newImage
                 }, completion: { (finished) in
                     self.circleShapeLayer.removeFromSuperlayer()
                     self.fillCircleShapeLayer.removeFromSuperlayer()
                     var maskPath: UIBezierPath!
-                    if let maskLayer = imageView.layer.mask as? CAShapeLayer where maskLayer.path != nil {
-                        maskPath = UIBezierPath(CGPath: maskLayer.path!)
+                    if let maskLayer = imageView.layer.mask as? CAShapeLayer, maskLayer.path != nil {
+                        maskPath = UIBezierPath(cgPath: maskLayer.path!)
                     } else {
                         maskPath = UIBezierPath(rect: imageView.bounds)
                     }
-                    self.containerViewMaskLayer.path = maskPath.CGPath
+                    self.containerViewMaskLayer.path = maskPath.cgPath
                     CATransaction.begin()
                     CATransaction.setCompletionBlock({
                         self.imageView?.image = self.newImage
-                        self.completionBlock?(.Success(self.newImage))
+                        self.completionBlock?(.success(self.newImage))
                         imageView.bmo_removeProgressAnimation()
                     })
                     let animateEnlarge = CABasicAnimation(keyPath: "transform")
@@ -94,22 +94,22 @@ class CirclePaintProgressAnimation: BaseProgressAnimation, BmoProgressHelpProtoc
                     transform3D = CATransform3DTranslate(transform3D, translatePoint.x, translatePoint.y, 0)
                     transform3D = CATransform3DScale(transform3D, 1 - self.marginPercent, 1 - self.marginPercent, 1)
                     animateEnlarge.duration = self.enlargeDuration
-                    animateEnlarge.fromValue = NSValue(CATransform3D: transform3D)
-                    self.containerViewMaskLayer.addAnimation(animateEnlarge, forKey: "enlarge")
+                    animateEnlarge.fromValue = NSValue(caTransform3D: transform3D)
+                    self.containerViewMaskLayer.add(animateEnlarge, forKey: "enlarge")
                     CATransaction.commit()
                 }
             )
         }
     }
-    override func failureAnimation(imageView: UIImageView, error: NSError?) {
+    override func failureAnimation(_ imageView: UIImageView, error: NSError?) {
         self.circleShapeLayer.removeFromSuperlayer()
         self.fillCircleShapeLayer.removeFromSuperlayer()
-        UIView.animateWithDuration(self.transitionDuration, animations: {
+        UIView.animate(withDuration: self.transitionDuration, animations: {
             self.darkerView.alpha = 0.0
             self.newImageView.alpha = 0.0
         }, completion: { (finished) in
             if finished {
-                self.completionBlock?(.Failure(error))
+                self.completionBlock?(.failure(error))
                 imageView.bmo_removeProgressAnimation()
             }
         })
@@ -123,15 +123,15 @@ class CirclePaintProgressAnimation: BaseProgressAnimation, BmoProgressHelpProtoc
         strongImageView.layoutIfNeeded()
         strongImageView.bmo_removeProgressAnimation()
 
-        helpPointView.frame = CGRectZero
+        helpPointView.frame = CGRect.zero
         strongImageView.addSubview(helpPointView)
 
         strongImageView.addSubview(darkerView)
         if strongImageView.image != nil {
-            darkerView.backgroundColor = UIColor.blackColor()
+            darkerView.backgroundColor = UIColor.black
             darkerView.alpha = 0.4
         } else {
-            darkerView.backgroundColor = UIColor.whiteColor()
+            darkerView.backgroundColor = UIColor.white
             progressColor = UIColor(red: 6.0/255.0, green: 125.0/255.0, blue: 255.0/255.0, alpha: 1.0)
         }
         darkerView.autoFit(strongImageView)
@@ -145,27 +145,27 @@ class CirclePaintProgressAnimation: BaseProgressAnimation, BmoProgressHelpProtoc
         newImageView.autoFit(containerView)
 
         if borderShape == true {
-            if let maskLayer = strongImageView.layer.mask as? CAShapeLayer where maskLayer.path != nil {
+            if let maskLayer = strongImageView.layer.mask as? CAShapeLayer, maskLayer.path != nil {
                 containerViewMaskLayer.path = maskLayer.path!.insetPath(marginPercent)
             } else {
-                containerViewMaskLayer.path = CGPathCreateWithRect(strongImageView.bounds, nil).insetPath(marginPercent)
+                containerViewMaskLayer.path = CGPath(rect: strongImageView.bounds, transform: nil).insetPath(marginPercent)
             }
         } else {
-            containerViewMaskLayer.path = BmoShapeHelper.getShapePath(.Circle, rect: strongImageView.bounds).insetPath(marginPercent)
+            containerViewMaskLayer.path = BmoShapeHelper.getShapePath(.circle, rect: strongImageView.bounds).insetPath(marginPercent)
         }
         circleShapeLayer.path = containerViewMaskLayer.path
-        circleShapeLayer.strokeColor = UIColor.lightGrayColor().CGColor
-        circleShapeLayer.fillColor = UIColor.clearColor().CGColor
+        circleShapeLayer.strokeColor = UIColor.lightGray.cgColor
+        circleShapeLayer.fillColor = UIColor.clear.cgColor
         circleShapeLayer.lineWidth = 5.0
         containerView.layer.addSublayer(circleShapeLayer)
 
         fillCircleShapeLayer.path = containerViewMaskLayer.path
-        fillCircleShapeLayer.strokeColor = progressColor.CGColor
-        fillCircleShapeLayer.fillColor = UIColor.clearColor().CGColor
+        fillCircleShapeLayer.strokeColor = progressColor.cgColor
+        fillCircleShapeLayer.fillColor = UIColor.clear.cgColor
         fillCircleShapeLayer.lineWidth = 5.0
         containerView.layer.addSublayer(fillCircleShapeLayer)
 
-        fillCircleMaskLayer.path = CGPathCreateMutable()
+        fillCircleMaskLayer.path = CGMutablePath()
         fillCircleShapeLayer.mask = fillCircleMaskLayer
 
         containerView.layer.mask = containerViewMaskLayer
@@ -177,18 +177,18 @@ class CirclePaintProgressAnimation: BaseProgressAnimation, BmoProgressHelpProtoc
     }
     
     //MARK: - ProgressHelpProtocol
-    func layoutChanged(target: AnyObject) {
+    func layoutChanged(_ target: AnyObject) {
         guard let strongImageView = self.imageView else {
             return
         }
         if borderShape == true {
-            if let maskLayer = strongImageView.layer.mask as? CAShapeLayer where maskLayer.path != nil {
+            if let maskLayer = strongImageView.layer.mask as? CAShapeLayer, maskLayer.path != nil {
                 containerViewMaskLayer.path = maskLayer.path!.insetPath(marginPercent)
             } else {
-                containerViewMaskLayer.path = CGPathCreateWithRect(strongImageView.bounds, nil).insetPath(marginPercent)
+                containerViewMaskLayer.path = CGPath(rect: strongImageView.bounds, transform: nil).insetPath(marginPercent)
             }
         } else {
-            containerViewMaskLayer.path = BmoShapeHelper.getShapePath(.Circle, rect: strongImageView.bounds).insetPath(marginPercent)
+            containerViewMaskLayer.path = BmoShapeHelper.getShapePath(.circle, rect: strongImageView.bounds).insetPath(marginPercent)
         }
         circleShapeLayer.path = containerViewMaskLayer.path
         fillCircleShapeLayer.path = containerViewMaskLayer.path
