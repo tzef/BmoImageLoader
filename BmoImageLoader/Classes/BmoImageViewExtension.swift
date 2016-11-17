@@ -65,6 +65,7 @@ extension UIImageView {
                 animator
                     .setNewImage(image)
                     .setCompletionState(.succeed)
+                    .closure()
             } else {
                 self.image = image
             }
@@ -77,6 +78,7 @@ extension UIImageView {
             animator
                 .setTotalUnitCount(progress.totalUnitCount)
                 .setCompletedUnitCount(progress.completedUnitCount)
+                .closure()
         }
 
         // Generate a unique download id to check whether the active request has changed while downloading
@@ -100,8 +102,11 @@ extension UIImageView {
                     animator
                         .setNewImage(image)
                         .setCompletionState(.succeed)
+                        .closure()
                 } else {
-                    animator.setCompletionState(BmoProgressCompletionState.failed(error: response.result.error as NSError?))
+                    animator
+                        .setCompletionState(BmoProgressCompletionState.failed(error: response.result.error as NSError?))
+                        .closure()
                 }
 
                 strongSelf.af_activeRequestReceipt = nil
@@ -155,7 +160,7 @@ extension UIImageView {
                 )
                 completion?(response)
             }
-        }
+        }.closure()
         return animator
     }
     

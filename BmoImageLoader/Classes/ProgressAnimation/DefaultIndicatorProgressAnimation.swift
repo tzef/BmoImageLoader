@@ -25,7 +25,7 @@ class DefaultIndicatorProgressAnimation: BaseProgressAnimation, BmoProgressHelpP
         self.imageView = imageView
         self.newImage = newImage
         
-        resetAnimation()
+        self.resetAnimation().closure()
     }
     
     // MARK : - Override

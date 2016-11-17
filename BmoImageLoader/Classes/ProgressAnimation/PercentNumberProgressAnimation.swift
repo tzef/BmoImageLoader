@@ -26,7 +26,7 @@ class PercentNumberProgressAnimation: BaseProgressAnimation, BmoProgressHelpProt
         self.percentFont = UIFont.systemFont(ofSize: 18.0)
         self.containerView = BmoProgressHelpView(delegate: self)
         
-        resetAnimation()
+        self.resetAnimation().closure()
     }
     
     // MARK : - Override

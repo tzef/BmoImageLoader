@@ -30,7 +30,7 @@ class CirclePaintProgressAnimation: BaseProgressAnimation, BmoProgressHelpProtoc
 
         marginPercent = (borderShape ? 0.1 : 0.5)
         progressColor = UIColor.white
-        resetAnimation()
+        self.resetAnimation().closure()
     }
 
     // MARK : - Override

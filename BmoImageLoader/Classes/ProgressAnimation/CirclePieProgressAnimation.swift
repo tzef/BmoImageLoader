@@ -26,7 +26,7 @@ class CirclePieProgressAnimation: BaseProgressAnimation, BmoProgressHelpProtocol
         self.containerView = BmoProgressHelpView(delegate: self)
         
         marginPercent = (borderShape ? 0.1 : 0.5)
-        resetAnimation()
+        self.resetAnimation().closure()
     }
 
     // MARK : - Override

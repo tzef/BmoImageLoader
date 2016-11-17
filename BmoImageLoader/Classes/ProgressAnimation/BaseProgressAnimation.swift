@@ -54,9 +54,9 @@ class BaseProgressAnimation: BmoProgressAnimator {
         self.completionState = state
         switch self.completionState {
         case .succeed:
-            setCompletedUnitCount(progress.totalUnitCount)
+            self.setCompletedUnitCount(progress.totalUnitCount).closure()
         case .failed(_):
-            setCompletedUnitCount(0)
+            self.setCompletedUnitCount(0).closure()
         default:
             break
         }
@@ -111,17 +111,17 @@ class BaseProgressAnimation: BmoProgressAnimator {
     }
     func setMarginPercent(_ percent: CGFloat) -> BmoProgressAnimator {
         self.marginPercent = percent
-        resetAnimation()
+        self.resetAnimation().closure()
         return self
     }
     func setProgressColor(_ color: UIColor) -> BmoProgressAnimator {
         self.progressColor = color
-        resetAnimation()
+        self.resetAnimation().closure()
         return self
     }
     func setPercentFont(_ font: UIFont) -> BmoProgressAnimator {
         self.percentFont = font
-        resetAnimation()
+        self.resetAnimation().closure()
         return self
     }
 

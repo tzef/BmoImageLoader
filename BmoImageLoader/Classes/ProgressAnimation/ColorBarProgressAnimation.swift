@@ -26,7 +26,7 @@ class ColorBarProgressAnimation: BaseProgressAnimation {
         self.position = position
         
         progressColor = UIColor(red: 6.0/255.0, green: 125.0/255.0, blue: 255.0/255.0, alpha: 1.0)
-        resetAnimation()
+        self.resetAnimation().closure()
     }
     
     // MARK : - Override
