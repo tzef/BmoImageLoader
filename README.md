@@ -1,6 +1,6 @@
 # BmoImageLoader
 
-[![CI Status](http://img.shields.io/travis/LEE ZHE YU/BmoImageLoader.svg?style=flat)](https://travis-ci.org/LEE ZHE YU/BmoImageLoader)
+[![CI Status](http://img.shields.io/travis/LEE%20ZHE%20YU/BmoImageLoader.svg?style=flat)](https://travis-ci.org/LEE%20ZHE%20YU/BmoImageLoader)
 [![Version](https://img.shields.io/cocoapods/v/BmoImageLoader.svg?style=flat)](http://cocoapods.org/pods/BmoImageLoader)
 [![License](https://img.shields.io/cocoapods/l/BmoImageLoader.svg?style=flat)](http://cocoapods.org/pods/BmoImageLoader)
 [![Platform](https://img.shields.io/cocoapods/p/BmoImageLoader.svg?style=flat)](http://cocoapods.org/pods/BmoImageLoader)
@@ -135,8 +135,6 @@ animator.setCompletionState(BmoProgressCompletionState.Succeed)
 ```
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
-
-## Requirements
 
 ## Installation
 
