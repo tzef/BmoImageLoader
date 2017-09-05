@@ -37,7 +37,7 @@ struct BmoShapeHelper {
         case .circle:
             let path = CGMutablePath()
             path.move(to: CGPoint(x: rect.midX, y: rect.minY))
-            path.addArc(center: CGPoint(x: rect.midX, y: rect.midY), radius: min(rect.width, rect.height) / 2, startAngle: CGFloat(-1 * M_PI_2), endAngle: CGFloat(M_PI_2 * 3), clockwise: false)
+            path.addArc(center: CGPoint(x: rect.midX, y: rect.midY), radius: min(rect.width, rect.height) / 2, startAngle: CGFloat(-1 * Double.pi/2), endAngle: CGFloat(Double.pi/2 * 3), clockwise: false)
             return path
         case .heart:
             let path = CGMutablePath()
@@ -90,9 +90,9 @@ struct BmoShapeHelper {
     }
     
     static func degreeToRadians(_ value: CGFloat) -> CGFloat {
-        return CGFloat(M_PI) * value / 180.0
+        return CGFloat(Double.pi) * value / 180.0
     }
     static func radiansToDegrees(_ value: CGFloat) -> CGFloat {
-        return value * 180.0 / CGFloat(M_PI)
+        return value * 180.0 / CGFloat(Double.pi)
     }
 }

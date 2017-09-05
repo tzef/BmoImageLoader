@@ -101,7 +101,7 @@ class CircleFillProgressAnimation: BaseProgressAnimation, BmoProgressHelpProtoco
             let path = CGMutablePath()
             let radius = sqrt(pow(strongImageView.bounds.width / 2, 2) + pow(strongImageView.bounds.height / 2, 2))
             path.move(to: CGPoint(x: strongImageView.bounds.midX, y: strongImageView.bounds.midY - radius))
-            path.addArc(center: CGPoint(x: strongImageView.bounds.midX, y: strongImageView.bounds.midY), radius: radius, startAngle: CGFloat(-1 * M_PI_2), endAngle: CGFloat(M_PI_2 * 3), clockwise: false)
+            path.addArc(center: CGPoint(x: strongImageView.bounds.midX, y: strongImageView.bounds.midY), radius: radius, startAngle: CGFloat(-1 * Double.pi/2), endAngle: CGFloat(Double.pi/2 * 3), clockwise: false)
             fillPath = path
             containerViewMaskLayer.path = path.insetPath(marginPercent)
         }

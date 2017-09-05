@@ -39,11 +39,11 @@ class CircleBrushProgressAnimation: BaseProgressAnimation, BmoProgressHelpProtoc
                 self.displayLink = nil
             }
             let radius = sqrt(pow(newImageView.bounds.width / 2, 2) + pow(newImageView.bounds.height / 2, 2))
-            let startAngle = CGFloat(-1 * M_PI_2)
+            let startAngle = CGFloat(-1 * Double.pi/2)
             let circlePath = UIBezierPath(arcCenter: newImageView.center,
                                           radius: radius,
                                           startAngle: startAngle,
-                                          endAngle: helpPoint.x * CGFloat(M_PI * 2) + startAngle,
+                                          endAngle: helpPoint.x * CGFloat(Double.pi * 2) + startAngle,
                                           clockwise: true)
             circlePath.addLine(to: newImageView.center)
             newImageViewMaskLayer.path = circlePath.cgPath
